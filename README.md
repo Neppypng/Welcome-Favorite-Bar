@@ -35,4 +35,4 @@ All options are under **Extensions → Welcome Favorites**:
 
 ## Author
 
-Arriana
+NeppyPNG

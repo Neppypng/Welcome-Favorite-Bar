@@ -1,0 +1,476 @@
+/* Every color, font and shape here comes from SillyTavern's own theme variables
+   (plus Moonlit Echoes' accent color when present), so the row restyles itself
+   whenever you switch or edit a theme. */
+
+.wf-wrap {
+    --wf-s: 1; /* icon size multiplier, set from the settings */
+    --wf-accent: var(--customThemeColor, var(--SmartThemeQuoteColor, currentColor));
+    --wf-border: var(--SmartThemeBorderColor, currentColor);
+    display: block;
+    text-align: left;
+    width: 100%;
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    margin: 4px 0 18px;
+    font-family: inherit;
+    color: var(--SmartThemeBodyColor, inherit);
+}
+
+/* ---------- Title ---------- */
+.wf-title {
+    /* inherits the "Recent Chats" font, size and weight from the theme;
+       colored with the theme's accent instead of plain white */
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin: 0 0 6px;
+    color: var(--wf-accent);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--wf-accent) 45%, transparent);
+    white-space: nowrap;
+}
+
+.wf-title-deco {
+    opacity: 0.75;
+    font-weight: normal;
+}
+
+.wf-title-word {
+    /* a soft blend from the accent into the theme's text color */
+    background: linear-gradient(90deg, var(--wf-accent), color-mix(in srgb, var(--wf-accent) 55%, var(--SmartThemeBodyColor, #fff)), var(--wf-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.wf-title-heart {
+    display: inline-block;
+    margin: 0 0.1em;
+}
+
+/* the little heart beats along with the glow when Heartbeat is on */
+.wf-heartbeat .wf-title-heart {
+    animation: wf-title-beat var(--wf-beat-dur) ease-in-out infinite;
+}
+
+@keyframes wf-title-beat {
+    0%, 45%, 100% { transform: scale(1); }
+    10% { transform: scale(1.25); }
+    20% { transform: scale(1); }
+    30% { transform: scale(1.15); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wf-heartbeat .wf-title-heart { animation: none; }
+}
+
+/* ---------- Row ---------- */
+.wf-row {
+    display: flex;
+    gap: calc(var(--wf-s) * 12px);
+    overflow-x: auto;
+    padding: 14px 12px 10px; /* room so glows and hover zoom aren't cut off */
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--wf-border) transparent;
+}
+
+.wf-card {
+    -webkit-tap-highlight-color: transparent;
+    --wf-w: 88px; /* base width, per shape */
+    --wf-h: 124px; /* base height, per shape */
+    flex: 0 0 auto;
+    width: calc(var(--wf-s) * var(--wf-w));
+    padding: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    cursor: pointer;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none; /* no "save image" popup on long-press */
+}
+
+.wf-frame {
+    position: relative;
+    display: block;
+    line-height: 0;
+}
+
+.wf-media {
+    display: block;
+    width: calc(var(--wf-s) * var(--wf-w));
+    height: calc(var(--wf-s) * var(--wf-h));
+    object-fit: cover;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid var(--wf-border);
+    box-shadow: 0 2px 10px var(--SmartThemeShadowColor, rgba(0, 0, 0, 0.5));
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, filter 0.15s ease;
+}
+
+.wf-card:focus-visible .wf-media,
+.wf-card:active .wf-media {
+    transform: scale(1.04);
+    border-color: var(--wf-accent);
+    box-shadow: 0 0 12px var(--wf-accent);
+}
+
+.wf-card:focus-visible {
+    outline: none;
+}
+
+.wf-name,
+.wf-info {
+    max-width: calc(var(--wf-s) * var(--wf-w));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+}
+
+.wf-name {
+    font-size: 0.8em;
+    color: var(--SmartThemeBodyColor, inherit);
+}
+
+.wf-info {
+    font-size: 0.68em;
+    opacity: 0.7;
+    min-height: 1.25em;
+    margin-top: -2px;
+    /* count and time can wrap onto two short lines instead of being cut off */
+    white-space: normal;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* ---------- Groups ---------- */
+.wf-collage {
+    display: grid;
+    gap: 1px;
+    background: var(--wf-border);
+}
+.wf-collage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    min-width: 0;
+    min-height: 0;
+}
+.wf-collage-1 { grid-template: 1fr / 1fr; }
+.wf-collage-2 { grid-template: 1fr / 1fr 1fr; }
+.wf-collage-3 { grid-template: 1fr 1fr / 1fr 1fr; }
+.wf-collage-3 img:first-child { grid-row: span 2; }
+.wf-collage-4 { grid-template: 1fr 1fr / 1fr 1fr; }
+
+.wf-badge {
+    position: absolute;
+    right: -4px;
+    bottom: -4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    line-height: 1;
+    color: var(--SmartThemeBodyColor, inherit);
+    background: var(--SmartThemeBlurTintColor, rgba(0, 0, 0, 0.6));
+    border: 1px solid var(--wf-accent);
+    pointer-events: none;
+}
+
+/* ---------- Shapes ---------- */
+.wf-shape-card .wf-card { --wf-w: 88px; --wf-h: 124px; }
+.wf-shape-card .wf-media { border-radius: var(--avatar-base-border-radius, 12px); }
+
+.wf-shape-square .wf-card { --wf-w: 96px; --wf-h: 96px; }
+.wf-shape-square .wf-media { border-radius: 16px; }
+
+.wf-shape-circle .wf-card { --wf-w: 96px; --wf-h: 96px; }
+.wf-shape-circle .wf-media { border-radius: 50%; }
+.wf-shape-circle .wf-badge { right: 2px; bottom: 2px; }
+
+/* Hexagon: the picture is clipped, so its outline comes from drop-shadows on the frame */
+.wf-shape-hexagon .wf-card { --wf-w: 96px; --wf-h: 104px; }
+.wf-shape-hexagon .wf-media { clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.wf-shape-hexagon .wf-badge { right: 4px; bottom: 10px; }
+
+.wf-shape-hexagon .wf-frame {
+    filter: drop-shadow(0 0 1px var(--wf-border)) drop-shadow(0 0 1px var(--wf-border));
+    transition: filter 0.15s ease;
+}
+.wf-shape-hexagon .wf-media {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+.wf-shape-hexagon .wf-card:focus-visible .wf-media,
+.wf-shape-hexagon .wf-card:active .wf-media {
+    box-shadow: none;
+}
+.wf-shape-hexagon .wf-card:focus-visible .wf-frame,
+.wf-shape-hexagon .wf-card:active .wf-frame {
+    filter: drop-shadow(0 0 2px var(--wf-accent)) drop-shadow(0 0 6px var(--wf-accent));
+}
+
+/* ---------- Heartbeat glow ---------- */
+/* A "lub-dub" glow in the theme's accent color. It's a drop-shadow on the frame,
+   so it follows every shape (hexagon, circle…). Speed and strength come from the settings. */
+.wf-wrap {
+    --wf-beat-dur: 1.8s;
+    --wf-beat-rest: 2px;
+    --wf-beat-peak: 9px;
+}
+
+@keyframes wf-heartbeat {
+    0%   { filter: drop-shadow(0 0 1px var(--wf-accent)) drop-shadow(0 0 var(--wf-beat-rest) var(--wf-accent)); }
+    10%  { filter: drop-shadow(0 0 2px var(--wf-accent)) drop-shadow(0 0 var(--wf-beat-peak) var(--wf-accent)); }
+    20%  { filter: drop-shadow(0 0 1px var(--wf-accent)) drop-shadow(0 0 var(--wf-beat-rest) var(--wf-accent)); }
+    30%  { filter: drop-shadow(0 0 2px var(--wf-accent)) drop-shadow(0 0 calc(var(--wf-beat-peak) * 0.75) var(--wf-accent)); }
+    45%,
+    100% { filter: drop-shadow(0 0 1px var(--wf-accent)) drop-shadow(0 0 var(--wf-beat-rest) var(--wf-accent)); }
+}
+
+.wf-heartbeat .wf-frame {
+    animation: wf-heartbeat var(--wf-beat-dur) ease-in-out infinite;
+}
+
+/* Soft static glow for people who turn off animations in their system settings */
+@media (prefers-reduced-motion: reduce) {
+    .wf-heartbeat .wf-frame {
+        animation: none;
+        filter: drop-shadow(0 0 1px var(--wf-accent)) drop-shadow(0 0 var(--wf-beat-peak) var(--wf-accent));
+    }
+}
+
+/* ---------- Scroll arrows ---------- */
+.wf-scroller {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.wf-scroller .wf-row {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.wf-arrow {
+    display: none; /* hidden unless the row overflows */
+    flex: 0 0 auto;
+    align-self: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--wf-border);
+    background: var(--SmartThemeBlurTintColor, rgba(0, 0, 0, 0.4));
+    color: var(--SmartThemeBodyColor, inherit);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8em;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.wf-scroller.wf-has-overflow .wf-arrow {
+    display: flex;
+}
+
+.wf-arrow:active {
+    border-color: var(--wf-accent);
+    color: var(--wf-accent);
+}
+
+/* ---------- Long-press menu ---------- */
+.wf-menu {
+    position: fixed;
+    z-index: 10000;
+    min-width: 200px;
+    max-width: calc(100vw - 16px);
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid var(--SmartThemeBorderColor, #555);
+    background: var(--SmartThemeBlurTintColor, rgba(20, 20, 24, 0.95));
+    backdrop-filter: blur(var(--SmartThemeBlurStrength, 10px));
+    -webkit-backdrop-filter: blur(var(--SmartThemeBlurStrength, 10px));
+    box-shadow: 0 6px 24px var(--SmartThemeShadowColor, rgba(0, 0, 0, 0.6));
+    color: var(--SmartThemeBodyColor, #eee);
+    font-family: var(--mainFontFamily, inherit);
+    font-size: var(--mainFontSize, 15px);
+}
+
+.wf-menu-title {
+    padding: 6px 10px 8px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--SmartThemeBorderColor, #555);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.wf-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.wf-menu-item i {
+    color: var(--customThemeColor, var(--SmartThemeQuoteColor, currentColor));
+}
+
+.wf-menu-item:active,
+.wf-menu-item:focus-visible {
+    background: color-mix(in srgb, var(--SmartThemeBodyColor, #fff) 10%, transparent);
+    outline: none;
+}
+
+/* ---------- "Recent Chats" title + shortcut buttons ---------- */
+/* Title centered in place. The Favorites row lives inside it. */
+.wf-center-heading {
+    text-align: center;
+    width: 100%;
+}
+
+/* Title (with Favorites) takes the full width; Docs / GitHub / Discord /
+   Temporary Chat wrap onto their own centered line below "Recent Chats". */
+.welcomeHeader.wf-header-has-favs {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.welcomeHeader.wf-header-has-favs .recentChatsTitle {
+    flex: 1 1 100%;
+}
+
+.welcomeHeader.wf-header-has-favs .welcomeShortcuts {
+    flex: 1 1 100%;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+/* ---------- Extensions panel ---------- */
+.wf-settings .wf-settings-section {
+    margin: 12px 0 4px;
+    padding-bottom: 4px;
+    font-weight: 600;
+    opacity: 0.85;
+    border-bottom: 1px solid var(--SmartThemeBorderColor, currentColor);
+}
+
+.wf-settings .wf-settings-section:first-child {
+    margin-top: 4px;
+}
+
+.wf-settings .wf-settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 6px 0;
+}
+
+.wf-settings .wf-settings-row select {
+    width: auto;
+    min-width: 50%;
+    margin: 0;
+}
+
+.wf-settings .wf-settings-row.wf-dim {
+    opacity: 0.45;
+}
+
+/* ---------- Mouse hover (desktop only, so taps on phones don't leave a stuck glow) ---------- */
+@media (hover: hover) and (pointer: fine) {
+    .wf-card:hover .wf-media {
+        transform: scale(1.04);
+        border-color: var(--wf-accent);
+        box-shadow: 0 0 12px var(--wf-accent);
+    }
+    .wf-shape-hexagon .wf-card:hover .wf-media {
+        box-shadow: none;
+    }
+    .wf-shape-hexagon .wf-card:hover .wf-frame {
+        filter: drop-shadow(0 0 2px var(--wf-accent)) drop-shadow(0 0 6px var(--wf-accent));
+    }
+    .wf-arrow:hover {
+        border-color: var(--wf-accent);
+        color: var(--wf-accent);
+    }
+    .wf-menu-item:hover {
+        background: color-mix(in srgb, var(--SmartThemeBodyColor, #fff) 10%, transparent);
+    }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 600px) {
+    /* a touch smaller so more bots fit on screen */
+    .wf-wrap {
+        --wf-phone: 0.88;
+    }
+    .wf-card {
+        width: calc(var(--wf-s) * var(--wf-phone, 1) * var(--wf-w));
+    }
+    .wf-media {
+        width: calc(var(--wf-s) * var(--wf-phone, 1) * var(--wf-w));
+        height: calc(var(--wf-s) * var(--wf-phone, 1) * var(--wf-h));
+    }
+    .wf-name,
+    .wf-info {
+        max-width: calc(var(--wf-s) * var(--wf-phone, 1) * var(--wf-w));
+    }
+    .wf-row {
+        gap: 10px;
+        padding: 12px 6px 8px;
+        scroll-padding-left: 6px;
+    }
+    /* smaller arrows so they don't eat the row; swiping works too */
+    .wf-scroller {
+        gap: 2px;
+    }
+    .wf-arrow {
+        width: 26px;
+        height: 26px;
+        font-size: 0.7em;
+    }
+    /* bigger, easier-to-tap menu buttons */
+    .wf-menu {
+        min-width: 220px;
+    }
+    .wf-menu-item {
+        min-height: 44px;
+        padding: 10px 12px;
+    }
+    /* settings: dropdown drops under its label when the panel is narrow */
+    .wf-settings .wf-settings-row {
+        flex-wrap: wrap;
+    }
+    .wf-settings .wf-settings-row select {
+        flex: 1 1 55%;
+    }
+}
